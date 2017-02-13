@@ -1,7 +1,7 @@
 import unittest
 from mock import make_fake_frames
 
-from pyfiler.callstack import FlameGraphCallStack
+from pwapt.callstack import FlameGraphCallStack
 
 
 TEST_FRAME_INFOS = [
