@@ -1,66 +1,81 @@
-import time
+"""
+This module contains Classes that represent the call stack.
+
+A CallStack object doesn't do much other than format it's output
+as desired based on :meth: format_stack and :meth: format_frame.
+"""
+
 from abc import ABCMeta, abstractmethod
 
+from lib import cachedproperty
 
-class BaseStack(ABCMeta):
-    formatter_class = None
+
+class CallStack:
+    """Base class that represensts a call stack as a whole."""
+
+    __metaclass__ = ABCMeta
 
     def __init__(self, frame):
-        self.ts = time.time()
+        """Save the top frame for later."""
         self._top_frame = frame
 
     @abstractmethod
-    def final_format(self):
+    def format_stack(self, frame):
+        """Format the entire entire stack as a string."""
         pass
-    
-    @property
+
+    @abstractmethod
+    def format_frame(self, frame):
+        """Format a single frame as a string."""
+        pass
+
+    @cachedproperty
     def formatted(self):
-        pass
+        """Return the final format of the callstack as a string."""
+        return self.format_stack(self.frames)
 
-
-    @property
-    def formatted_frames(self):
-        frames = []
-        for frame in self.frames:
-            frames.append(self.formatter_class.format_frame(frame))
-        return frames
-
-    @property
+    @cachedproperty
     def frames(self):
+        """Back into a list of frames from the top frame."""
         rv = []
         frame = self._top_frame
         while frame is not None:
             rv.append(frame)
             frame = frame.f_back
-        return rv
+        return list(reversed(rv))
 
     def __repr__(self):
-        return self.formatted()
+        return self.formatted
 
     def __str__(self):
-        return self.formatted()
+        return self.formatted
 
     def __eq__(self, other):
-        return self.formatted() == other.formatted()
+        """Equal if :property: formatted's are equal."""
+        return self.formatted == other.formatted
 
 
-class FrameFormatter(ABCMeta):
+class FlameGraphFormatMixin(object):
+    """Formatter for FlameGraph output.
 
-    @abstractmethod
+    Each frame is formatted as:
+        "modulename`function_name"
+
+    Each frame in the final format is joined by ';'
+    """
+
     def format_frame(self, frame):
-        pass
-
-
-class FlameGraphFrameFormatter(FrameFormatter):
-    @staticmethod
-    def format_frame(frame):
+        """Format each frame as "module.__name__`function_name"."""
         name = frame.f_code.co_name
         filename = frame.f_globals.get('__name__')
-        return "%s`%s;" % (name, filename)
- 
+        return "%s`%s" % (filename, name)
 
-class FlameGraphCallStack(BaseStack):
-    formatter_class = FlameGraphFrameFormatter
+    def format_stack(self, frames):
+        """Format the stack by joining the formatted frames on ';'."""
+        return ";".join(map(self.format_frame, frames))
 
-    def formatted(self):
-        return ";".join(self.formatted_frames)
+
+class FlameGraphCallStack(FlameGraphFormatMixin, CallStack):
+    """Callstack that formats output in the Flamegraph format."""
+
+    pass
