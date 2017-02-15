@@ -5,57 +5,41 @@ A CallStack object doesn't do much other than format it's output
 as desired based on :meth: format_stack and :meth: format_frame.
 """
 
-from abc import ABCMeta, abstractmethod
+class CallStack(object):
+    def __init__(self, frames):
+        self.frames = frames
 
-from lib import cachedproperty
-
-
-class CallStack:
-    """Base class that represensts a call stack as a whole."""
-
-    __metaclass__ = ABCMeta
-
-    def __init__(self, frame):
-        """Save the top frame for later."""
-        self._top_frame = frame
-
-    @abstractmethod
-    def format_stack(self, frame):
-        """Format the entire entire stack as a string."""
-        pass
-
-    @abstractmethod
-    def format_frame(self, frame):
-        """Format a single frame as a string."""
-        pass
-
-    @cachedproperty
-    def formatted(self):
-        """Return the final format of the callstack as a string."""
-        return self.format_stack(self.frames)
-
-    @cachedproperty
-    def frames(self):
-        """Back into a list of frames from the top frame."""
+    @classmethod
+    def from_frame(cls, frame):
+        """Create a CallStack instance given the top-most Frame."""
         rv = []
-        frame = self._top_frame
         while frame is not None:
             rv.append(frame)
             frame = frame.f_back
-        return list(reversed(rv))
+        callstack = cls(frames=[f for f in reversed(rv)])
+        return callstack
+
+    @property
+    def depth(self):
+        """Return how many frames are in the callstack."""
+        return len(self.frames)
 
     def __repr__(self):
-        return self.formatted
+        """Represent by the code names joined with ;."""
+        names = [str(f.f_code.co_name) for f in self.frames]
+        return ";".join(names)
 
-    def __str__(self):
-        return self.formatted
+    def __hash__(self):
+        """Hash based on the frame filenames."""
+        hash_ = hash("".join([str(f.f_code.co_filename) for f in self.frames]))
+        return hash_
 
     def __eq__(self, other):
-        """Equal if :property: formatted's are equal."""
-        return self.formatted == other.formatted
+        """Equal by hash."""
+        return hash(self) == hash(other)
 
 
-class FlameGraphFormatMixin(object):
+class FlameGraphCallStack(CallStack):
     """Formatter for FlameGraph output.
 
     Each frame is formatted as:
@@ -73,9 +57,3 @@ class FlameGraphFormatMixin(object):
     def format_stack(self, frames):
         """Format the stack by joining the formatted frames on ';'."""
         return ";".join(map(self.format_frame, frames))
-
-
-class FlameGraphCallStack(FlameGraphFormatMixin, CallStack):
-    """Callstack that formats output in the Flamegraph format."""
-
-    pass

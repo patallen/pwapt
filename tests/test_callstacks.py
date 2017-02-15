@@ -1,7 +1,7 @@
 import unittest
 from mock import make_fake_frames
 
-from pwapt.callstack import FlameGraphCallStack
+from pwapt import callstack as cs
 
 
 TEST_FRAME_INFOS = [
@@ -35,18 +35,26 @@ TEST_FRAME_INFOS = [
 ]
 
 
-class TestFlameGraphCallStack(unittest.TestCase):
+class BaseCallStackTestCase(unittest.TestCase):
     def setUp(self):
         self.frame_infos = TEST_FRAME_INFOS
         self.top_frame = make_fake_frames(self.frame_infos)
-        self.callstack = FlameGraphCallStack(self.top_frame)
 
-    def test_expansion_of_top_frame_to_frames(self):
-        self.assertEqual(len(self.callstack.frames), len(self.frame_infos))
 
-    def test_formatted_stack(self):
-        final = "sillyboy`get_silly;seltzer`sparkle;champions`win"
-        self.assertEqual(final, str(self.callstack.formatted))
+class TestCallStack(BaseCallStackTestCase):
+    def test_from_frame(self):
+        callstack = cs.CallStack.from_frame(self.top_frame)
+        self.assertEqual(3, len(callstack.frames))
+
+    def test_callstack_depth(self):
+        callstack = cs.CallStack.from_frame(self.top_frame)
+        self.assertEqual(callstack.depth, 3)
+
+    def test_callstack_hash(self):
+        callstack = cs.CallStack.from_frame(self.top_frame)
+        fns = ('/you/are/such/a/sillyboy.py/i/love/'
+               'seltzer.py/breakfast/of/champions.py')
+        self.assertEqual(hash(callstack), hash(fns))
 
 
 if __name__ == '__main__':
