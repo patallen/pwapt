@@ -3,9 +3,6 @@ import signal
 import atexit
 
 
-from pwapt.handlers import SampleHandler
-
-
 class Sampler(object):
     """Takes samples of the current stack at `interval`.
 
@@ -14,14 +11,10 @@ class Sampler(object):
     deal with as desired.
     """
 
-    def __init__(self, interval, handler_class):
+    def __init__(self, interval, handler):
         """Intialize the sampler - set interval and create handler."""
-        if not issubclass(handler_class, SampleHandler):
-            raise ValueError(
-                '`handler_class` must be a subclass of SampleHandler'
-            )
         self.interval = interval
-        self.handler = handler_class()
+        self.handler = handler
         self._started_at = None
         self._last_reset = None
 
