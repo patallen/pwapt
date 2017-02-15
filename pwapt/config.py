@@ -1,10 +1,13 @@
 
+
 class Config(dict):
     """Configuration object that operaties like a dict.
 
     Setting names must be CAPITALIZED and must starte with
     a letter else they will not be included in the config.
     """
+
+    __required_keys__ = ['SAMPLING_INTERVAL']
 
     def from_dict(self, conf_dict):
         """Populate the config from a python dictionary."""
