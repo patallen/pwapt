@@ -36,9 +36,8 @@ class BaseSampleHandler:
 class SampleHandler(BaseSampleHandler):
     """"Handles and stores samples provided by the Sampler.
 
-    This class should do all the work of ordering/formatting
-    the samples as desired. In this implimentation we are just
-    keeping an aggregate count of each formatted call.
+    This class is only responsible for storing the call stacks
+    and their counts and handing the data over when requested.
     """
 
     stack_class = cs.CallStack
@@ -48,7 +47,6 @@ class SampleHandler(BaseSampleHandler):
 
     def handle(self, sample):
         """Increment the count for this stack hash."""
-
         callstack = self.stack_class.from_frame(frame=sample)
         self.store[callstack] += 1
 
@@ -66,4 +64,5 @@ class SampleHandler(BaseSampleHandler):
         return sum(self.store.values())
 
     def __contains__(self, other):
+        """Check hash of `other` call stack against the ones in the store."""
         return other in [hash(cs) for cs in self.store.keys()]

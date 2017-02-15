@@ -1,12 +1,15 @@
-"""
-This module contains Classes that represent the call stack.
+"""This module contains Classes that represent the call stack."""
 
-A CallStack object doesn't do much other than format it's output
-as desired based on :meth: format_stack and :meth: format_frame.
-"""
 
 class CallStack(object):
+    """Represents the entire call stack for any given sample.
+
+    The call stack is not responsible for much other than holding
+    creating an instance of itself and holding the stack frames.
+    """
+
     def __init__(self, frames):
+        """Initialize and store a set of stack frames."""
         self.frames = frames
 
     @classmethod

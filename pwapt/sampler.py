@@ -23,11 +23,10 @@ class Sampler(object):
         self.interval = interval
         self.handler = handler_class()
         self._started_at = None
-        self._last_restart = None
 
     def start(self):
-        """Start the sampling loop."""
-        self._started_at = time.time()
+        """Start the sampling loop and timers as necessary."""
+
         try:
             signal.signal(signal.SIGVTALRM, self._sample)
         except ValueError:
@@ -41,28 +40,33 @@ class Sampler(object):
         signal.setitimer(signal.ITIMER_VIRTUAL, self.interval)
 
     def reset(self):
+        """Reset the handler and last restart time."""
         self.handler.reset()
-        self._started_at = time.time()
 
     def stop(self):
+        """Stop the operation of the sampler.
+
+        This resets the handler and sets nullifies _started_at
+        """
         self.reset()
         self._startd_at = None
         signal.setitimer(signal.ITIMER_VIRTUAL, 0)
 
     def __del__(self):
-        self.stop()
+        """Stop the signals when the object is deleted.
 
-    def dump(self, reset=False):
-        return self.handler.dump(reset=reset)
+        This prevents any signal timeout exceptions from being raised.
+        """
 
     @property
     def session_duration(self):
-        if not self._last_restart:
+        """How long we've been running since the last reset call."""
+        if not self._last_reset:
             return 0
-        return time.time() - self._last_restart
 
     @property
     def total_duration(self):
+        """How long we've been running since `start` was called."""
         if not self._started_at:
             return 0
         return time.time() - self._started_at
