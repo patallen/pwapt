@@ -2,7 +2,8 @@ import copy
 import unittest
 from mock import make_fake_frames
 
-from pwapt.handlers import FlameGraphSampleHandler
+from pwapt import callstack as cs
+from pwapt import handlers as hlr
 
 
 TEST_FRAME_INFO1 = [
@@ -32,43 +33,63 @@ TEST_FRAME_INFO2 = [
 ]
 
 
-class TestFlameGraphSampleHandler(unittest.TestCase):
+class TestSampleHandler(unittest.TestCase):
     def setUp(self):
         self.frames = []
-        self.handler = FlameGraphSampleHandler()
+        self.handler = hlr.SampleHandler()
         for inf in (
-            TEST_FRAME_INFO1, copy.copy(TEST_FRAME_INFO1), TEST_FRAME_INFO2
+            TEST_FRAME_INFO1,
+            copy.copy(TEST_FRAME_INFO1),
+            TEST_FRAME_INFO2
         ):
-            self.frames.append(make_fake_frames(inf))
+            frames = make_fake_frames(inf)
+            self.frames.append(frames)
 
     def test_handle(self):
-        self.handler.handle(self.frames[0])
-        stack_string = "sillyboy`get_silly;seltzer`sparkle"
-        dump = self.handler.dump()
+        callstack = cs.CallStack.from_frame(self.frames[-1])
 
-        self.assertEqual(dump.keys()[0], stack_string)
-        self.assertEqual(sum(dump.values()), 1)
+        self.handler.handle(self.frames[-1])
+
+        self.assertIn(callstack, self.handler)
+        self.assertEqual(str(callstack), str(self.handler.store.keys()[0]))
 
     def test_sample_count(self):
-        for frame in self.frames:
-            self.handler.handle(frame)
+        frames = (f for f in self.frames)
 
+        self.handler.handle(next(frames))
+        self.assertEqual(self.handler.sample_count, 1)
+
+        self.handler.handle(next(frames))
+        self.assertEqual(self.handler.sample_count, 2)
+
+        self.handler.handle(next(frames))
         self.assertEqual(self.handler.sample_count, 3)
 
     def test_reset(self):
-        for frame in self.frames:
-            self.handler.handle(frame)
+        for f in self.frames:
+            self.handler.handle(f)
 
+        self.assertEqual(self.handler.sample_count, 3)
         self.handler.reset()
         self.assertEqual(self.handler.sample_count, 0)
 
     def test_dump(self):
-        for frame in self.frames:
-            self.handler.handle(frame)
+        for f in self.frames:
+            self.handler.handle(f)
+
+        a = cs.CallStack.from_frame(self.frames[2])
+        b = cs.CallStack.from_frame(self.frames[0])
 
         dump = self.handler.dump()
-        self.assertEqual(len(dump.keys()), 2)
+        self.assertEqual(dump[a], 1)
+        self.assertEqual(dump[b], 2)
 
+    def test_contains(self):
+        control = cs.CallStack.from_frame(self.frames[2])
+        for f in self.frames:
+            self.handler.handle(f)
+
+        self.assertIn(control, self.handler)
 
 if __name__ == '__main__':
     unittest.main()

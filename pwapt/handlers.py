@@ -3,10 +3,10 @@ import collections
 from abc import ABCMeta, abstractmethod
 
 
-from pwapt.callstack import FlameGraphCallStack
+from pwapt import callstack as cs
 
 
-class SampleHandler:
+class BaseSampleHandler:
     """Abstract base class for handling samples.
 
     This class should do all the work of ordering/formatting
@@ -33,7 +33,7 @@ class SampleHandler:
         pass
 
 
-class FlameGraphSampleHandler(SampleHandler):
+class SampleHandler(BaseSampleHandler):
     """"Handles and stores samples provided by the Sampler.
 
     This class should do all the work of ordering/formatting
@@ -41,24 +41,29 @@ class FlameGraphSampleHandler(SampleHandler):
     keeping an aggregate count of each formatted call.
     """
 
-    stack_class = FlameGraphCallStack
+    stack_class = cs.CallStack
 
     def __init__(self):
-        self._cache = collections.defaultdict(int)
+        self.store = collections.defaultdict(int)
 
     def handle(self, sample):
         """Increment the count for this stack hash."""
-        self._cache[str(self.stack_class(sample))] += 1
+
+        callstack = self.stack_class.from_frame(frame=sample)
+        self.store[callstack] += 1
 
     def dump(self, reset=False):
         """Return our the the dict as-is."""
-        return self._cache
+        return self.store
 
     def reset(self):
         """Drop all of our current samples and reset the timer."""
-        self._cache = collections.defaultdict(int)
+        self.store = collections.defaultdict(int)
 
     @property
     def sample_count(self):
         """How many samples we have handled since the last timer reset."""
-        return sum(self._cache.values())
+        return sum(self.store.values())
+
+    def __contains__(self, other):
+        return other in [hash(cs) for cs in self.store.keys()]
