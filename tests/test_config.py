@@ -1,6 +1,6 @@
 import unittest
 
-from pwapt.config import Config
+from pwapt import Config
 
 TEST_SETTING = True
 no_go_here = True
@@ -13,39 +13,39 @@ class TestConfig(unittest.TestCase):
     def test_config_from_dict(self):
         config_dict = {
             'DEBUG': True,
-            'SAMPLE_INTERVAL': 0.001,
+            'SAMPLING_INTERVAL': 0.001,
         }
         self.config.from_dict(config_dict)
 
         self.assertIn('DEBUG', self.config.keys())
-        self.assertIn('SAMPLE_INTERVAL', self.config.keys())
+        self.assertIn('SAMPLING_INTERVAL', self.config.keys())
 
         self.assertEqual(self.config['DEBUG'], True)
-        self.assertEqual(self.config['SAMPLE_INTERVAL'], 0.001)
+        self.assertEqual(self.config['SAMPLING_INTERVAL'], 0.001)
 
     def test_config_from_object(self):
         class ConfigObject(object):
-            SAMPLE_INTERVAL = 0.001
+            SAMPLING_INTERVAL = 0.001
             DEBUG = True
             no_go_here = True
 
         self.config.from_object(ConfigObject)
 
-        self.assertIn('SAMPLE_INTERVAL', self.config.keys())
+        self.assertIn('SAMPLING_INTERVAL', self.config.keys())
         self.assertNotIn('no_go_here', self.config.keys())
-        self.assertEqual(self.config['SAMPLE_INTERVAL'], 0.001)
+        self.assertEqual(self.config['SAMPLING_INTERVAL'], 0.001)
 
     def test_all_uppercase(self):
         config_dict = {
             'DEBUG': True,
             'no_go_here': True,
-            'SAMPLE_INTERVAL': 0.001
+            'SAMPLING_INTERVAL': 0.001
         }
         self.config.from_dict(config_dict)
 
         self.assertNotIn('no_go_here', self.config.keys())
         self.assertIn('DEBUG', self.config.keys())
-        self.assertIn('SAMPLE_INTERVAL', self.config.keys())
+        self.assertIn('SAMPLING_INTERVAL', self.config.keys())
 
     def test__get_valid_keys(self):
         key_dict = {
