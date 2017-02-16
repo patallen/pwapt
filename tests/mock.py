@@ -23,6 +23,22 @@ class FakeFrame(object):
         self.f_back = previous
 
 
+class FakeSamplerMiddleware(object):
+    """Mock for SampleMiddlewareManager tests."""
+
+    def process_sample(self, sample):
+        """Return something so that we can expect something."""
+        return 'GET_TESTED'
+
+
+class FakeHandlerMiddleware(object):
+    """Mock for HandlerMiddlewareManager tests."""
+
+    def process_payload(self, payload):
+        """Return something so that we can expect something."""
+        return 'PAYLOADED'
+
+
 def make_fake_code(code_info):
     """Build a FakeCode.
 
