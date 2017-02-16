@@ -34,9 +34,9 @@ class cachedproperty(object):
 
 
 def import_from_string(dotted_path):
-    """
-    Import a dotted module path and return the attribute/class designated by
-    the last name in the path. Raise ImportError if the import failed.
+    """Import a module based on a given string.
+
+    Used primarily for middleware. Borrowed from Django.
     """
     try:
         module_path, class_name = dotted_path.rsplit('.', 1)
