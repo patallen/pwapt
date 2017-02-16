@@ -7,7 +7,7 @@ class Config(dict):
     a letter else they will not be included in the config.
     """
 
-    __required_keys__ = ['SAMPLING_INTERVAL']
+    __required_keys__ = ['SAMPLING_INTERVAL', 'HANDLER_DUMP_INTERVAL']
 
     def from_dict(self, conf_dict):
         """Populate the config from a python dictionary."""
