@@ -1,6 +1,7 @@
 import time
 import signal
 import atexit
+from pwapt.middleware import SamplerMiddlewareManager
 
 
 class Sampler(object):
@@ -11,9 +12,10 @@ class Sampler(object):
     deal with as desired.
     """
 
-    def __init__(self, interval, handler):
+    def __init__(self, handler, config):
         """Intialize the sampler - set interval and create handler."""
-        self.interval = interval
+        self.middleware = SamplerMiddlewareManager.from_config(config)
+        self.interval = config['SAMPLING_INTERVAL']
         self.handler = handler
         self._started_at = None
         self._last_reset = None
@@ -33,7 +35,8 @@ class Sampler(object):
         atexit.register(self.stop)
 
     def _sample(self, signum, frame):
-        self.handler.handle(frame)
+        sample = self.middleware.process_sample(frame)
+        self.handler.handle(sample)
         signal.setitimer(signal.ITIMER_VIRTUAL, self.interval)
 
     def reset(self):
