@@ -31,6 +31,7 @@ class MiddlewareManager(object):
 
     @classmethod
     def _get_mw_classes_from_config(cls, config):
+        config = config or []
         imports = []
         try:
             for import_string in config:
