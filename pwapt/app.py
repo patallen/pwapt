@@ -58,9 +58,8 @@ class Pwapt(object):
 
 
 def _setup_and_start(sampler_class, handler_class, config):
-    interval = config.get('SAMPLING_INTERVAL')
-    handler = handler_class()
-    sampler = sampler_class(interval=interval, handler=handler)
+    handler = handler_class(config=config)
+    sampler = sampler_class(handler=handler, config=config)
 
     def run_sampler(sampler):
         sampler.start()
