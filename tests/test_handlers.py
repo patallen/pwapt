@@ -1,6 +1,6 @@
 import copy
 import unittest
-from mock import make_fake_frames
+from fake import make_fake_frames
 
 from pwapt import callstack as cs
 from pwapt import handlers as hlr

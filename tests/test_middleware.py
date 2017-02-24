@@ -1,6 +1,6 @@
 import unittest
 from pwapt import middleware as mw
-from tests.mock import FakeSamplerMiddleware, FakeHandlerMiddleware
+from tests.fake import FakeSamplerMiddleware, FakeHandlerMiddleware
 from pwapt.exceptions import PwaptConfigException
 
 
@@ -9,10 +9,10 @@ class TestMiddlewareManagers(unittest.TestCase):
         self.app_home = '../'
         self.config = {
             'SAMPLER_MIDDLEWARE_CLASSES': [
-                'tests.mock.FakeSamplerMiddleware'
+                'tests.fake.FakeSamplerMiddleware'
             ],
             'HANDLER_MIDDLEWARE_CLASSES': [
-                'tests.mock.FakeHandlerMiddleware'
+                'tests.fake.FakeHandlerMiddleware'
             ]
         }
 

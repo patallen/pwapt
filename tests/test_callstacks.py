@@ -1,5 +1,5 @@
 import unittest
-from mock import make_fake_frames
+from fake import make_fake_frames
 
 from pwapt import callstack as cs
 
@@ -55,6 +55,7 @@ class TestCallStack(BaseCallStackTestCase):
         fns = ('/you/are/such/a/sillyboy.py/i/love/'
                'seltzer.py/breakfast/of/champions.py')
         self.assertEqual(hash(callstack), hash(fns))
+
 
 
 if __name__ == '__main__':
