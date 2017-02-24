@@ -40,23 +40,3 @@ class CallStack(object):
     def __eq__(self, other):
         """Equal by hash."""
         return hash(self) == hash(other)
-
-
-class FlameGraphCallStack(CallStack):
-    """Formatter for FlameGraph output.
-
-    Each frame is formatted as:
-        "modulename`function_name"
-
-    Each frame in the final format is joined by ';'
-    """
-
-    def format_frame(self, frame):
-        """Format each frame as "module.__name__`function_name"."""
-        name = frame.f_code.co_name
-        filename = frame.f_globals.get('__name__')
-        return "%s`%s" % (filename, name)
-
-    def format_stack(self, frames):
-        """Format the stack by joining the formatted frames on ';'."""
-        return ";".join(map(self.format_frame, frames))
