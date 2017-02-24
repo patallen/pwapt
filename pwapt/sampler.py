@@ -63,13 +63,13 @@ class Sampler(object):
     @property
     def session_duration(self):
         """How long we've been running since the last reset call."""
-        if not self._last_reset:
+        if self._last_reset is None:
             return 0
         return time.time() - self._last_reset
 
     @property
     def total_duration(self):
         """How long we've been running since `start` was called."""
-        if not self._started_at:
+        if self._started_at is None:
             return 0
         return time.time() - self._started_at

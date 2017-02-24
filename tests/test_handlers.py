@@ -32,11 +32,16 @@ TEST_FRAME_INFO2 = [
     }
 ]
 
+config = {
+    'SAMPLING_INTERVAL': .0005,
+    'HANDLER_DUMP_INTERVAL': 30,
+}
+
 
 class TestSampleHandler(unittest.TestCase):
     def setUp(self):
         self.frames = []
-        self.handler = hlr.SampleHandler()
+        self.handler = hlr.SampleHandler(config)
         for inf in (
             TEST_FRAME_INFO1,
             copy.copy(TEST_FRAME_INFO1),

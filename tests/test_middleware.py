@@ -32,18 +32,12 @@ class TestMiddlewareManagers(unittest.TestCase):
         mwm = mw.SamplerMiddlewareManager.from_config(self.config)
         self.assertIn(FakeSamplerMiddleware, mwm.middleware_classes)
 
-        with self.assertRaises(PwaptConfigException):
-            mwm = mw.SamplerMiddlewareManager.from_config(self.empty_config)
-
         rv = mwm.process_sample({})
         self.assertEqual(rv, 'GET_TESTED')
 
     def test_handler_middleware_manager(self):
         mwm = mw.HandlerMiddlewareManager.from_config(self.config)
         self.assertIn(FakeHandlerMiddleware, mwm.middleware_classes)
-
-        with self.assertRaises(PwaptConfigException):
-            mwm = mw.HandlerMiddlewareManager.from_config(self.empty_config)
 
         rv = mwm.process_payload({})
         self.assertEqual(rv, 'PAYLOADED')
