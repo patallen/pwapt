@@ -50,7 +50,7 @@ class Sampler(object):
         This resets the handler and sets nullifies _started_at
         """
         self.reset()
-        self._startd_at = None
+        self._started_at = None
         signal.setitimer(signal.ITIMER_VIRTUAL, 0)
 
     def __del__(self):

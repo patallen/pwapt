@@ -49,6 +49,7 @@ class SampleHandler(BaseSampleHandler):
         """Initialize the sampler and any middleware."""
         self.middleware = mw.HandlerMiddlewareManager.from_config(config)
         self.store = collections.defaultdict(int)
+        self._last_reset = time.time()
         self._dump_interval = config['HANDLER_DUMP_INTERVAL']
 
     def handle(self, sample):
