@@ -1,5 +1,5 @@
 import unittest
-from fake import make_fake_frames
+from .fake import make_fake_frames
 
 from pwapt import callstack as cs
 

@@ -82,4 +82,4 @@ class SampleHandler(BaseSampleHandler):
 
     def __contains__(self, other):
         """Check hash of `other` call stack against the ones in the store."""
-        return other in [hash(cs) for cs in self.store.keys()]
+        return other in [cs for cs in list(self.store.keys())]

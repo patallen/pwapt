@@ -16,9 +16,9 @@ class DumpLoggingMiddleware(object):
         count = sum(payload.values())
         length = len(payload)
         size = sys.getsizeof(payload)
-        print "Dumped %s samples in %s unique groups. Size: %s bytes." % (
+        print("Dumped %s samples in %s unique groups. Size: %s bytes." % (
             count, length, size
-        )
+        ))
         return payload
 
 

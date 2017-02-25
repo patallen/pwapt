@@ -6,7 +6,7 @@ from pwapt.handlers import SampleHandler
 from pwapt.app import Pwapt
 from pwapt.sampler import Sampler
 
-from fake import make_fake_frames
+from .fake import make_fake_frames
 
 
 config = {

@@ -1,4 +1,4 @@
-from lib import import_from_string
+from .lib import import_from_string
 from pwapt.exceptions import PwaptConfigException
 
 
