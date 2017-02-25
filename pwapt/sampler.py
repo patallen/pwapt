@@ -28,7 +28,7 @@ class Sampler(object):
 
         try:
             signal.signal(signal.SIGVTALRM, self._sample)
-        except ValueError:
+        except ValueError:  # pragma: no cover
             raise ValueError('Can only sample on the main thread')
 
         signal.setitimer(signal.ITIMER_VIRTUAL, self.interval)

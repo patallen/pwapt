@@ -56,6 +56,12 @@ class TestCallStack(BaseCallStackTestCase):
                'seltzer.py/breakfast/of/champions.py')
         self.assertEqual(hash(callstack), hash(fns))
 
+    def test_repr(self):
+        callstack = cs.CallStack.from_frame(self.top_frame)
+        repred = repr(callstack)
+        self.assertEqual(repred, ";".join(
+            f.f_code.co_name for f in callstack.frames)
+        )
 
 
 if __name__ == '__main__':

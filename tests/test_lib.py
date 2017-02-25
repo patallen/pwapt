@@ -44,4 +44,3 @@ class LibTestCase(unittest.TestCase):
     def test_no_self(self):
         rv = hello
         self.assertIsInstance(rv, cachedproperty)
-

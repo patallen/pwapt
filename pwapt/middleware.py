@@ -33,15 +33,10 @@ class MiddlewareManager(object):
     def _get_mw_classes_from_config(cls, config):
         config = config or []
         imports = []
-        try:
-            for import_string in config:
-                imp = cls._get_mw_class_from_string(import_string)
-                imports.append(imp)
-        except TypeError:
-            raise PwaptConfigException(
-                "No config for %s found. Make sure to include a %s entry in "
-                "your config." % (cls.MIDDLEWARE_TYPE, cls.CONFIG_NAME)
-            )
+
+        for import_string in config:
+            imp = cls._get_mw_class_from_string(import_string)
+            imports.append(imp)
 
         return imports
 

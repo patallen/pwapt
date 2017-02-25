@@ -1,5 +1,9 @@
 import copy
 import unittest
+
+import mock
+from mock import MagicMock
+
 from .fake import make_fake_frames
 
 from pwapt import callstack as cs
@@ -94,6 +98,15 @@ class TestSampleHandler(unittest.TestCase):
             self.handler.handle(f)
 
         self.assertIn(control, self.handler)
+
+    def test_dump_interval(self):
+        self.handler.dump = MagicMock(return_value=10000)
+        self.handler._dump_interval = 10
+        self.handler._last_reset = 0
+
+        self.handler.handle(self.frames[-1])
+        assert self.handler.dump.called
+
 
 if __name__ == '__main__':
     unittest.main()

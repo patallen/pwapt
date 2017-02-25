@@ -23,17 +23,17 @@ class BaseSampleHandler:
     @abstractmethod
     def handle(self):
         """Method used by the Sampler to hand over samples."""
-        pass
+        pass  # pragma: no cover
 
     @abstractmethod
     def reset(self):
         """Method used by the Sampler to drop the sample set."""
-        pass
+        pass  # pragma: no cover
 
     @abstractmethod
     def dump(self):
         """Method used by the Sampler to retrive the data."""
-        pass
+        pass  # pragma: no cover
 
 
 class SampleHandler(BaseSampleHandler):
