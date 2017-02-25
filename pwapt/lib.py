@@ -17,8 +17,6 @@ class cachedproperty(object):
 
     def __get__(self, obj, _cls):
         """Get the value from the cache or evaluate the func."""
-        if obj is None:
-            return self
         ev = self._prop_cache(obj).get(self.f_name)
         return ev or self._cache_and_return(obj)
 
