@@ -32,14 +32,13 @@ class Pwapt(object):
     def run(self):
         """Start the sampler after checking configs."""
         self._validate_config()
-        sampler_class = self._get_sampler_class()
-        handler_class = self._get_handler_class()
-        sampler, handler = _setup_and_start(sampler_class=sampler_class,
-                                            handler_class=handler_class,
-                                            config=self.config)
-        self.sampler, self.handler = sampler, handler
+
+        self.handler = self._make_handler()
+        self.sampler = self._make_sampler(self.handler)
+
+        gevent.spawn(self.sampler.start)
+
         self._started = time.time()
-        # return PwaptInterface(self, sampler, handler)
 
     def _validate_config(self):
         if not self.config.keys():
@@ -50,18 +49,10 @@ class Pwapt(object):
                 raise exc.PwaptConfigException(
                     exc.PwaptConfigException.MISSING_REQUIRED)
 
-    def _get_handler_class(self):
-        return self.config.get('handler_class') or self.DEFAULT_HANDLER_CLASS
+    def _make_handler(self):
+        class_ = self.config.get('handler_class') or self.DEFAULT_HANDLER_CLASS
+        return class_(config=self.config)
 
-    def _get_sampler_class(self):
-        return self.config.get('sampler_class') or self.DEFAULT_SAMPLER_CLASS
-
-
-def _setup_and_start(sampler_class, handler_class, config):
-    handler = handler_class(config=config)
-    sampler = sampler_class(handler=handler, config=config)
-
-    def run_sampler(sampler):
-        sampler.start()
-    gevent.spawn(run_sampler, sampler)
-    return sampler, handler
+    def _make_sampler(self, handler):
+        class_ = self.config.get('sampler_class') or self.DEFAULT_SAMPLER_CLASS
+        return class_(handler=handler, config=self.config)
