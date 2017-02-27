@@ -29,14 +29,17 @@ class FormattingHandlerMiddleware(object):
     """
 
     def process_payload(self, payload):
-        def format_frame(frame):
-            return "%s(%s)" % (
-                frame.f_code.co_name,
-                frame.f_globals.get('__name__')
-            )
         ts = time.time()
         rv = []
-        for callstack, count in payload.iteritems():
-            string = ";".join([format_frame(f) for f in callstack.frames])
+        for callstack, count in payload.items():
+            string = ";".join(
+                [self._format_frame(f) for f in callstack.frames]
+            )
             rv.append((ts, count, string))
         return rv
+
+    def _format_frame(self, frame):
+        return "%s(%s)" % (
+            frame.f_code.co_name,
+            frame.f_globals.get('__name__')
+        )
