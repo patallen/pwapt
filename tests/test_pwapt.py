@@ -72,7 +72,6 @@ class TestPwaptApplication(unittest.TestCase):
 
     @mock.patch('gevent.spawn', lambda method, *a, **kw: method(*a, **kw))
     def test_sampler_start(self):
-        gevent.monkey.patch_all()
         sampler = MockSampler()
         self.pwapt._make_sampler = lambda x: sampler
         self.pwapt.run()
