@@ -7,4 +7,4 @@ python:
   - '3.6'
 
 install: 'pip install -r requirements/testing.txt'
-script: ./runtests.sh
+script: coverage run --source=pwapt -m unittest discover
