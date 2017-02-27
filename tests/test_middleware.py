@@ -1,12 +1,14 @@
-from __future__ import print_function
-
 import sys
 import mock
 import unittest
 from pwapt import middleware as mw
 from pwapt.contrib import middleware as cmw
 
-from tests.fake import FakeSamplerMiddleware, FakeHandlerMiddleware, make_fake_frames
+from tests.fake import (
+    FakeSamplerMiddleware,
+    FakeHandlerMiddleware,
+    make_fake_frames
+)
 
 
 def _expand_frames(frame):
@@ -100,12 +102,12 @@ class TestContribMiddleware(unittest.TestCase):
         callstack = Callstack()
         self.payload = {callstack: 10}
 
-    @mock.patch('builtins.print')
-    def test_dump_logging_middleware(self, mock_print):
+    @mock.patch('pwapt.contrib.middleware.logger.log')
+    def test_dump_logging_middleware(self, mock_log):
         lmw = cmw.DumpLoggingMiddleware()
         res = lmw.process_payload(self.payload)
         size = sys.getsizeof(self.payload)
-        mock_print.assert_called_with(
+        mock_log.assert_called_with(
             'Dumped 10 samples in 1 unique groups. Size: {} bytes.'.format(size)
         )
         self.assertEqual(res, self.payload)

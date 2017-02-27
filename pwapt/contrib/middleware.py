@@ -3,9 +3,12 @@
 To use any of these, add 'pwapt.contrib.middleware.<classname>'
 to their respective spots in your Pwapt config.
 """
-
 import sys
 import time
+import logging
+
+
+logger = logging.getLogger('__name__')
 
 
 class DumpLoggingMiddleware(object):
@@ -16,7 +19,7 @@ class DumpLoggingMiddleware(object):
         count = sum(payload.values())
         length = len(payload)
         size = sys.getsizeof(payload)
-        print("Dumped %s samples in %s unique groups. Size: %s bytes." % (
+        logger.log("Dumped %s samples in %s unique groups. Size: %s bytes." % (
             count, length, size
         ))
         return payload
