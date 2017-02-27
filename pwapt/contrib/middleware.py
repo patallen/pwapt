@@ -3,7 +3,6 @@
 To use any of these, add 'pwapt.contrib.middleware.<classname>'
 to their respective spots in your Pwapt config.
 """
-import sys
 import time
 import logging
 
@@ -18,9 +17,8 @@ class DumpLoggingMiddleware(object):
         """Let's display the size of the payload."""
         count = sum(payload.values())
         length = len(payload)
-        size = sys.getsizeof(payload)
-        logger.log("Dumped %s samples in %s unique groups. Size: %s bytes." % (
-            count, length, size
+        logger.log("Dumped %s samples in %s unique groups." % (
+            count, length
         ))
         return payload
 

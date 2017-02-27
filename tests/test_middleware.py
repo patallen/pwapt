@@ -106,9 +106,8 @@ class TestContribMiddleware(unittest.TestCase):
     def test_dump_logging_middleware(self, mock_log):
         lmw = cmw.DumpLoggingMiddleware()
         res = lmw.process_payload(self.payload)
-        size = sys.getsizeof(self.payload)
         mock_log.assert_called_with(
-            'Dumped 10 samples in 1 unique groups. Size: {} bytes.'.format(size)
+            'Dumped 10 samples in 1 unique groups.'
         )
         self.assertEqual(res, self.payload)
 
