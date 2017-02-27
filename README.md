@@ -31,6 +31,8 @@ pwapt_config = {
 ```
 
 - To set up, all you need to do is instanciate  a Pwapt object, pass a config, and call Pwapt's `run`.
+- This snippet should be placed above the app invocation.
+
 ```python
 profiler = Pwapt()
 profiler.config.from_dict(pwapt_config)
