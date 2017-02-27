@@ -7,6 +7,6 @@ python:
   - '3.6'
 
 install: 'pip install -r requirements/testing.txt'
-script: coverage run --source=pwapt -m unittest discover
+script: if [[ $TRAVIS_PYTHON_VERSION == '3.2' ]]; then coverage run --source=pwapt -m unittest discover; fi
 after_success:
   - codecov
