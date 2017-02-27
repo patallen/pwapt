@@ -1,6 +1,7 @@
 # PWAPT
 
 [![Build Status](https://travis-ci.org/patallen/pwapt.svg?branch=master)](https://travis-ci.org/patallen/pwapt)
+[![Codecov](https://img.shields.io/codecov/c/github/patallen/pwapt.svg)](https://img.shields.io/codecov/c/github/patallen/pwapt.svg)
 
 PWAPT is a light profiler for python web applications. A.K.A Python Web Application Profiling Toolkit
 
@@ -35,4 +36,4 @@ profiler = Pwapt()
 profiler.config.from_dict(pwapt_config)
 profiler.run()
 ```
-- This does currently require `gevent` be installed and monkey patched.
+- This does currently require `gevent` and its monkey patching.
