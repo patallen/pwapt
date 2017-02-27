@@ -8,3 +8,5 @@ python:
 
 install: 'pip install -r requirements/testing.txt'
 script: coverage run --source=pwapt -m unittest discover
+after_success:
+  - codecov
