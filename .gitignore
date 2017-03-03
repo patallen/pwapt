@@ -5,3 +5,4 @@
 *.coverage
 .tox
 .cache
+junit_test_output
