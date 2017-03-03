@@ -39,3 +39,4 @@ profiler.config.from_dict(pwapt_config)
 profiler.run()
 ```
 - This does currently require `gevent` be installed and its monkey patching be completed.
+- Profile it.
